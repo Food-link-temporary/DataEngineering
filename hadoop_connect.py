@@ -5,12 +5,12 @@ import requests
 
 # Connect to HDFS
 
-hdfs = pa.HadoopFileSystem(host='192.168.219.121', port=9000)
+
 
 # List the contents of the root directory
-files = hdfs.ls('/')
-for file in files:
-    print(file)
+# files = hdfs.ls('/')
+# for file in files:
+#     print(file)
 
 
 
@@ -112,14 +112,9 @@ categories = pd.DataFrame(categories)
 categories = categories[categories["categoryId"]!='']
 
 
-# ... 으로 중간 생략되는 데이터를 모두 표시하기 위해
-# 최대 행 수 설정
-# pd.set_option('display.max_rows', 500)
-# 최대 열 수 설정
-# pd.set_option('display.max_columns', 500)
 
 
-# categories[categories["categoryId"]=='63']
+
 
 catId = categories.categoryId
 catType = categories.categoryType
@@ -154,19 +149,18 @@ def parse(response: str, **kwargs) -> List[str]:
 
 
 
-# for i in range(100):
-#     ids = fetch(session, page=i)
 
+## 하둡파일시스템 컨넥트
 
-
+hdfs = pa.HadoopFileSystem(host='192.168.219.121', port=9000)
 
 temp_all = []
 ## 카테고리 ID와 TYPE 쌍을 페어로 전달
 ## 각 카테고리 ex) cat4 , cat3.. 에 맞는 카테고리 ID를 입력하여 레시피 ID 추출
 ## 각 아이디, 타입별 페이지 10개씩만 추출
 
-#num_page = 2
-# iter = 3
+## hdfs에 count.txt 파일이 있다면 그 값을 불러와서 시작할 페이지 번호를 지정
+## 만약 파일이 없다면 1페이지부터 시작
 checkFile = hdfs.exists('/usr/data/count.txt')
 if(checkFile == True):
   count = hdfs.cat("/usr/data/count.txt")
@@ -178,8 +172,6 @@ start_page = count
 end_page = start_page + 1
 
 
-
-# while count != iter:
 temp_cat = []
 
 for pair in zip(catId,catType):
@@ -207,13 +199,17 @@ for pair in zip(catId,catType):
       if len(tempIds) == 0: break
       for id in tempIds:
         temp_cat.append([pair[0],pair[1], id])
-    
+
+
+
 count = count + 1
 
+# csv 파일로 임시 저장
 temp_cat = pd.DataFrame(temp_cat)
 temp_cat.to_csv("category"+str(count)+".csv", index=False)
-#     temp_cat.to_csv("test"+str(count)+".csv", index=False)
 
+# count.txt 파일을 생성 후 새로 업데이트 된 count 값 입력
+# hdfs에 count.txt 파일을 업로드 하여 다음 크론잡 실행시 count 값 반영
 with open("count.txt", "w") as f:
   f.write(str(count))
   f.close()
@@ -221,37 +217,11 @@ with open("count.txt", 'rb') as f:
   hdfs.upload("/usr/data/count.txt", f)
   f.close()
 
+# 저장한 csv 파일을 읽어와서 hdfs에 업로드
+with open("category"+str(count)+".csv", 'rb') as f:
+  hdfs.upload('/usr/data/'+"category"+str(count)+".csv", f)
+  f.close()
 
-#hdfs = pa.HadoopFileSystem(host='192.168.219.121', port=9000)
-
-# List the contents of the root directory
-#files = hdfs.ls('/')
-#for file in files:
-#    print(file)
-
+hdfs.close()
 
 
-# for i in range(1, 5):
-#     tempIds = fetch(session, page=i)
-#     for id in tempIds:
-#         temp_all.append(id)
-
-
-# Define the local file path and HDFS path
-#local_file_path = '/root/hadoop_test/testload.txt'
-#hdfs_path = '/usr/test/file2.txt'
-'''
-# Upload the file to HDFS
-with open(local_file_path, 'rb') as f:
-    hdfs.upload(hdfs_path, f)
-'''
-
-
-## upload 2
-"""
-response = requests.get('https://blog.naver.com/kihyun1998/223033574553')
-data = response.text
-
-with open(data, 'rb') as f:
-    hdfs.upload(hdfs_path, f)
-"""
