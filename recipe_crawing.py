@@ -272,8 +272,9 @@ for i in range(start_num, end_num) :
         review = review_fetch(session, recipeId)
         comment = comment_fetch(session, recipeId)
     except (json.decoder.JSONDecodeError, SyntaxError):
+        errorId = str(recipeId)+"\n"
         with hdfs.open("/usr/recipe/data/errorId.txt", "ab") as f:
-            f.write(str(recipeId).encode()+"\n")
+            f.write(errorId.encode())
             f.close()
     else:
         recipe_data[recipeId] = {"recipeInfo" : recipe_info, "review" : review, "comment" : comment}
