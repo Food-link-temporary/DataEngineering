@@ -1,7 +1,22 @@
 from flask import Flask, request, jsonify
 from pyspark.sql import SparkSession
+from pyspark import SparkConf, SparkContext
 
 app = Flask(__name__)
+
+conf = (SparkConf().setMaster("k8s://https://192.168.219.100:6443") # Your master address name
+        .set("spark.kubernetes.container.image", "joron1827/pyspark:latest") # Spark image name
+        .set("spark.driver.port", "2222") # Needs to match svc
+        .set("spark.driver.blockManager.port", "7777")
+        .set("spark.driver.host", "driver-service.jupyterhub.svc.cluster.local") # Needs to match svc
+        .set("spark.driver.bindAddress", "0.0.0.0")
+        .set("spark.kubernetes.namespace", "spark")
+        .set("spark.kubernetes.authenticate.driver.serviceAccountName", "spark")
+        .set("spark.kubernetes.authenticate.serviceAccountName", "spark")
+        .set("spark.executor.instances", "3")
+        .set("spark.kubernetes.container.image.pullPolicy", "IfNotPresent")
+        .set("spark.app.name", "joronSpark")
+        .set("spark.executor.cores", "3"))
 
 # SparkSession 생성
 spark = SparkSession.builder.appName("SparkStreamingApp").getOrCreate()
