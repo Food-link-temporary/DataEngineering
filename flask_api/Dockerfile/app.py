@@ -8,7 +8,7 @@ conf = (SparkConf().setMaster("k8s://https://192.168.219.100:6443") # Your maste
         .set("spark.kubernetes.container.image", "joron1827/pyspark:latest") # Spark image name
         .set("spark.driver.port", "2222") # Needs to match svc
         .set("spark.driver.blockManager.port", "7777")
-        .set("spark.driver.host", "driver-service.jupyterhub.svc.cluster.local") # Needs to match svc
+        .set("spark.driver.host", "driver-service.flask.svc.cluster.local") # Needs to match svc
         .set("spark.driver.bindAddress", "0.0.0.0")
         .set("spark.kubernetes.namespace", "spark")
         .set("spark.kubernetes.authenticate.driver.serviceAccountName", "spark")

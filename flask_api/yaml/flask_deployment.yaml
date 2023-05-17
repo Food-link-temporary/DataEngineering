@@ -22,5 +22,5 @@ spec:
           - sh
           - -c
           - >
-            git clone https://github.com/Food-link-temporary/DataEngineering.git && python ./DataEngineering/flask_api/app.py
+            git clone https://github.com/Food-link-temporary/DataEngineering.git && python ./DataEngineering/flask_api/Dockerfile/app.py
 
