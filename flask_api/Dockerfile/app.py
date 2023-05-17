@@ -19,12 +19,13 @@ conf = (SparkConf().setMaster("k8s://https://192.168.219.100:6443") # Your maste
         .set("spark.executor.cores", "3"))
 
 # SparkSession 생성
-spark = SparkSession.builder.appName("SparkStreamingApp").getOrCreate()
+spark = SparkSession.builder.config(conf=conf).getOrCreate()
 
 # Spark Streaming 애플리케이션 생성
 ssc = None  # Spark StreamingContext 객체
 
-@app.route('/process-text', methods=['POST'])
+
+@app.route('/api', methods=['POST'])
 def process_text():
     text = request.json['text']
 
@@ -36,6 +37,7 @@ def process_text():
     result = process_data(df)
 
     return jsonify(result)
+
 
 def process_data(df):
     # 데이터 처리 작업 수행

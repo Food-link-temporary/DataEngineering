@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: flask-app
+  namespace: flask
 spec:
   replicas: 1
   selector:
@@ -14,7 +15,12 @@ spec:
     spec:
       containers:
         - name: flask-app
-          image: joron1827/flask_spark_spi:v1  
+          image: joron1827/flask_spark_api:v1  
           ports:
             - containerPort: 5000
+          command:
+          - sh
+          - -c
+          - >
+            git clone https://github.com/Food-link-temporary/DataEngineering.git && python ./DataEngineering/flask_api/app.py
 
