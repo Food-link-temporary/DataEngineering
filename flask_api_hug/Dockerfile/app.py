@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Request
 from typing import Dict
 from urllib.parse import urlparse
 from transformers import PreTrainedTokenizerFast, GPT2LMHeadModel
@@ -17,23 +17,16 @@ app = Flask(__name__)
 
 
 @app.route('/api', methods=['GET'])
-def process_text():
-    print("request 체크: ", request.url)
-    # return request.url
+def process_text(request: Request):
 
-    params = urlparse(request.url).params
-
-    # print("params 체크:",params)
-
-    return params
+    params = urlparse(request.url).query
 
     params = {key:value for key, value in [param.split('=') for param in params.split('&')]}
 
-    print(params)
     # 데이터 처리 및 결과 얻기
-    # result = process_data(params["ingredients"])
+    result = process_data(params["ingredients"])
 
-    return jsonify(params)
+    return jsonify(result)
 
 
 def generate_text(input_text: str) -> str:
@@ -45,6 +38,8 @@ def generate_text(input_text: str) -> str:
 
 def process_data(data: str) -> Dict[str,str]:
     generated_text = generate_text(data)
+
+    return generated_text
     try:
         matches = re.search(RECIPE_PATTERN, generated_text, re.DOTALL)
         return {
