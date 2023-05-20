@@ -17,5 +17,6 @@ spec:
       containers:
         - name: springboot-app
           image: gurrl9823/foodlink-springboot
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
