@@ -1,3 +1,6 @@
 Flask
-transformers
-torch
+# transformers
+# torch
+numpy
+pandas
+scikit-learn==0.24.2
