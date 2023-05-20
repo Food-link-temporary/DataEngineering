@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: springboot-app
-          image: <도커 이미지 이름>
+          image: gurrl9823/foodlink-springboot
           ports:
             - containerPort: 8080
