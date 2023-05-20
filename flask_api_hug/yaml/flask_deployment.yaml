@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: flask-app
-          image: joron1827/flask_api_hug:v1  
+          image: joron1827/flask_api_hug:v2
           ports:
             - containerPort: 5000
           command:

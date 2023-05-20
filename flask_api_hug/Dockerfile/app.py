@@ -21,10 +21,11 @@ def process_text():
     params = urlparse(request.url).params
     params = {key:value for key, value in [param.split('=') for param in params.split('&')]}
 
+    print(params)
     # 데이터 처리 및 결과 얻기
-    result = process_data(params["ingredients"])
+    # result = process_data(params["ingredients"])
 
-    return jsonify(result)
+    return jsonify(params)
 
 
 def generate_text(input_text: str) -> str:
