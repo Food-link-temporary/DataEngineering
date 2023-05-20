@@ -10,9 +10,9 @@ conf = (SparkConf().setMaster("k8s://https://192.168.219.100:6443") # Your maste
         .set("spark.driver.blockManager.port", "7777")
         .set("spark.driver.host", "driver-service.flask.svc.cluster.local") # Needs to match svc
         .set("spark.driver.bindAddress", "0.0.0.0")
-        .set("spark.kubernetes.namespace", "spark")
-        .set("spark.kubernetes.authenticate.driver.serviceAccountName", "spark")
-        .set("spark.kubernetes.authenticate.serviceAccountName", "spark")
+        .set("spark.kubernetes.namespace", "flask")
+        .set("spark.kubernetes.authenticate.driver.serviceAccountName", "spark-flask")
+        .set("spark.kubernetes.authenticate.serviceAccountName", "spark-flask")
         .set("spark.executor.instances", "3")
         .set("spark.kubernetes.container.image.pullPolicy", "IfNotPresent")
         .set("spark.app.name", "joronSpark")
