@@ -17,7 +17,7 @@ app = Flask(__name__)
 
 
 @app.route('/api', methods=['GET'])
-def process_text(request: Request):
+def process_text():
 
     params = urlparse(request.url).query
 
