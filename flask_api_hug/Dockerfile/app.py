@@ -18,9 +18,11 @@ app = Flask(__name__)
 
 @app.route('/api', methods=['GET'])
 def process_text():
-    print("request 체크: ", request.url)
     
+    return request.url
+
     params = urlparse(request.url).params
+
     print("params 체크:",params)
     params = {key:value for key, value in [param.split('=') for param in params.split('&')]}
 
