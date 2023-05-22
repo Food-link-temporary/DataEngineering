@@ -3,3 +3,4 @@ numpy
 pandas
 sqlalchemy
 scikit-learn==0.24.2
+requests

@@ -120,7 +120,7 @@ def load_recipes() -> pd.DataFrame:
     df = pd.read_sql(query, con=engine)
 
     ## 속성명 변환
-    df.rename(columns={'recipe_ingredient':'recipeIngredient', 'recipe_instruction':'recipeInstructions'})
+    df.rename(columns={'recipe_ingredient':'recipeIngredient', 'recipe_instruction':'recipeInstructions'}, inplace=True)
     
     df["recipeIngredient"] = df["recipeIngredient"].apply(literal_eval)
     df["recipeInstructions"] = df["recipeInstructions"].apply(literal_eval)
