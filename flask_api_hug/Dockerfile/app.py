@@ -133,7 +133,7 @@ def load_recipes() -> pd.DataFrame:
     engine.connect()
 
     query = """
-    SELECT * FROM _10000_recipe;
+    SELECT name, recipe_ingredient, recipe_instruction FROM _10000_recipe;
     """
 
     ## 레시피 데이터 프레임생성
