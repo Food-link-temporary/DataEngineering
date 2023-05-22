@@ -102,7 +102,11 @@ def generate_recipe(ingredients: str, apiKey: str) -> Dict[str,str]:
     # generated_text = TOKENIZER.decode(output[0], skip_special_tokens=True)
     # return generated_text
 
-from ast import literal_eval
+
+def literal_evals(x):
+    from ast import literal_eval
+    return literal_eval(str(x))
+
 def load_recipes() -> pd.DataFrame:
 
 
@@ -123,12 +127,12 @@ def load_recipes() -> pd.DataFrame:
     df.rename(columns={'recipe_ingredient':'recipeIngredient', 'recipe_instruction':'recipeInstructions'}, inplace=True)
     
 
-    # df = df.astype({'recipeIngredient':'str','recipeInstructions':'str'})
 
-    df["recipeIngredient"] = df["recipeIngredient"].apply(literal_eval(lambda x : str(x)))
-    df["recipeInstructions"] = df["recipeInstructions"].apply(literal_eval(lambda x : str(x)))
+    df["recipeIngredient"] = df["recipeIngredient"].apply(literal_evals)
+    df["recipeInstructions"] = df["recipeInstructions"].apply(literal_evals)
 
     return df.drop_duplicates("name").reset_index(drop=True)
+
 
 
 def get_cosine_similarity(df: pd.DataFrame, column: str) -> np.ndarray:
