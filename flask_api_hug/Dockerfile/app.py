@@ -105,6 +105,10 @@ def generate_recipe(ingredients: str, apiKey: str) -> Dict[str,str]:
 
 def literal_evals(x):
     from ast import literal_eval
+
+    import re
+
+
     print(x)
     return literal_eval(str(x))
 
@@ -129,8 +133,8 @@ def load_recipes() -> pd.DataFrame:
     
 
 
-    df["recipeIngredient"] = df["recipeIngredient"].apply(literal_evals)
-    df["recipeInstructions"] = df["recipeInstructions"].apply(literal_evals)
+    # df["recipeIngredient"] = df["recipeIngredient"].apply(literal_evals)
+    # df["recipeInstructions"] = df["recipeInstructions"].apply(literal_evals)
 
     return df.drop_duplicates("name").reset_index(drop=True)
 
