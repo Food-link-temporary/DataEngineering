@@ -105,6 +105,7 @@ def generate_recipe(ingredients: str, apiKey: str) -> Dict[str,str]:
 
 def literal_evals(x):
     from ast import literal_eval
+    print(x)
     return literal_eval(str(x))
 
 def load_recipes() -> pd.DataFrame:
