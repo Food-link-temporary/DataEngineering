@@ -181,7 +181,7 @@ def get_similar_recipes(recipe: Dict[str,str], df: pd.DataFrame, num_display=3) 
     max_index = min(num_display, len(recipes))
 
     similar_index = make_similar_index(recipes, title=(len(recipe["foodName"])>0))
-    return recipes.loc[similar_index[0,1:max_index+1]]
+    return recipes.loc[similar_index[0,1:max_index+1]].rename(columns={k:v for k,v in zip(DB_KEYS,RECIPE_KEYS)})
 
 
 def insert_recipe(recipe: Dict[str,str], df: pd.DataFrame) -> pd.DataFrame:
