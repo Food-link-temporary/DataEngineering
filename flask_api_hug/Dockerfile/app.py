@@ -22,10 +22,10 @@ NUM_SIMILAR_RECIPES = 3
 # load the pre-trained KoGPT model
 # MODEL = GPT2LMHeadModel.from_pretrained('skt/kogpt2-base-v2')
 
-parser = argparse.ArgumentParser()
+# parser = argparse.ArgumentParser()
 # parser.add_argument("--k", "--apiKey", dest="menu", type=str, help='Please set Google Bard API key')
-parser.add_argument("--k", "--apiKey", dest="menu", type=str, help='Please set Google Bard API key',default=str()) # 임시 테스트
-args = parser.parse_args()
+
+# args = parser.parse_args()
 
 app = Flask(__name__)
 
@@ -34,13 +34,24 @@ app = Flask(__name__)
 def process_text():
     params = urlparse(request.url).query
     params = {key:value for key, value in [param.split('=') for param in params.split('&')]}
-    result = process_data(params["ingredients"], args.apiKey)
+    result = process_data(params["ingredients"])
     return jsonify(result)
 
 
-def process_data(query: str, apiKey: str) -> List[Dict]:
+# def process_data(query: str, apiKey: str) -> List[Dict]:
+#     try:
+#         generated_recipe = generate_recipe(query, apiKey)
+#         data = {key: value for key, value in zip(RECIPE_KEYS, generated_recipe.values())}
+#         similar = get_similar_recipes(data, RECIPES, NUM_SIMILAR_RECIPES).to_dict("records")
+#     except:
+#         data = {"title":str(), "ingredients":query.split(','), "recipe":str()}
+#         similar = get_similar_recipes(data, RECIPES, NUM_SIMILAR_RECIPES).to_dict("records")
+#     return [data]+similar
+
+
+def process_data(query: str) -> List[Dict]:
     try:
-        generated_recipe = generate_recipe(query, apiKey)
+        generated_recipe = generate_recipe(query)
         data = {key: value for key, value in zip(RECIPE_KEYS, generated_recipe.values())}
         similar = get_similar_recipes(data, RECIPES, NUM_SIMILAR_RECIPES).to_dict("records")
     except:
@@ -63,7 +74,7 @@ def process_data(query: str, apiKey: str) -> List[Dict]:
 
 
 
-def generate_recipe(ingredients: str, apiKey: str) -> Dict[str,str]:
+def generate_recipe(ingredients: str) -> Dict[str,str]:
 
 
     dummy_recipe =    {
@@ -131,8 +142,6 @@ def load_recipes() -> pd.DataFrame:
     ## 속성명 변환
     df.rename(columns={'recipe_ingredient':'recipeIngredient', 'recipe_instruction':'recipeInstructions'}, inplace=True)
     
-
-
     # df["recipeIngredient"] = df["recipeIngredient"].apply(literal_evals)
     # df["recipeInstructions"] = df["recipeInstructions"].apply(literal_evals)
 
