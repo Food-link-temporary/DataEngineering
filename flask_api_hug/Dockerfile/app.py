@@ -23,7 +23,8 @@ NUM_SIMILAR_RECIPES = 3
 # MODEL = GPT2LMHeadModel.from_pretrained('skt/kogpt2-base-v2')
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--k", "--apiKey", dest="menu", type=str, help='Please set Google Bard API key')
+# parser.add_argument("--k", "--apiKey", dest="menu", type=str, help='Please set Google Bard API key')
+parser.add_argument("--k", "--apiKey", dest="menu", type=str, help='Please set Google Bard API key',default=str()) # 임시 테스트
 args = parser.parse_args()
 
 app = Flask(__name__)
@@ -48,24 +49,82 @@ def process_data(query: str, apiKey: str) -> List[Dict]:
     return [data]+similar
 
 
+# def generate_recipe(ingredients: str, apiKey: str) -> Dict[str,str]:
+#     question = QUESTION_HEADER+ingredients
+#     headers = {"Authorization":"Bearer "+apiKey, "Content-Type":"text/plain"}
+#     data = {"input": question}
+#     response = requests.post("https://api.bardapi.dev/chat", headers=headers, json=data)
+#     return json.loads(response.json()["output"])
+
+#     # input_ids = TOKENIZER.encode(input_text, return_tensors='pt')
+#     # output = MODEL.generate(input_ids, max_length=150, do_sample=True, temperature=0.3)
+#     # generated_text = TOKENIZER.decode(output[0], skip_special_tokens=True)
+#     # return generated_text
+
+
+
 def generate_recipe(ingredients: str, apiKey: str) -> Dict[str,str]:
-    question = QUESTION_HEADER+ingredients
-    headers = {"Authorization":"Bearer "+apiKey, "Content-Type":"text/plain"}
-    data = {"input": question}
-    response = requests.post("https://api.bardapi.dev/chat", headers=headers, json=data)
-    return json.loads(response.json()["output"])
+
+
+    dummy_recipe =    {
+        "foodName": "감자 김치 계란 볶음밥",
+        "ingredients": [
+            "감자 1개",
+            "당근 1/2개",
+            "양파 1/2개",
+            "계란 2개",
+            "김치 1/2컵",
+            "밥 1공기",
+            "식용유 1큰술",
+            "간장 2큰술",
+            "고춧가루 1큰술",
+            "설탕 1큰술",
+            "참기름 1큰술",
+            "깨 약간"
+        ],
+        "recipe": [
+            "1. 감자, 당근, 양파는 깨끗이 씻어 먹기 좋은 크기로 썰어줍니다.",
+            "2. 계란은 풀어줍니다.",
+            "3. 팬에 식용유를 두르고 중불로 가열합니다.",
+            "4. 감자를 넣고 노릇노릇해질 때까지 볶습니다.",
+            "5. 당근, 양파, 김치를 넣고 함께 볶습니다.",
+            "6. 계란을 넣고 스크램블 에그를 만들어줍니다.",
+            "7. 밥을 넣고 볶습니다.",
+            "8. 간장, 고춧가루, 설탕, 참기름을 넣고 간을 맞춥니다.",
+            "9. 깨를 뿌려주면 완성입니다."
+        ]
+    }
+
+    return dummy_recipe 
 
     # input_ids = TOKENIZER.encode(input_text, return_tensors='pt')
     # output = MODEL.generate(input_ids, max_length=150, do_sample=True, temperature=0.3)
     # generated_text = TOKENIZER.decode(output[0], skip_special_tokens=True)
     # return generated_text
 
-
 from ast import literal_eval
 def load_recipes() -> pd.DataFrame:
-    df = pd.read_csv("recipe.csv")[DB_KEYS]
+
+
+    from sqlalchemy import create_engine
+    import pandas as pd
+
+    engine = create_engine('postgresql://root:root@192.168.219.123:5432/recipe')
+    engine.connect()
+
+    query = """
+    SELECT * FROM _10000_recipe;
+    """
+
+    ## 레시피 데이터 프레임생성
+    df = pd.read_sql(query, con=engine)
+
+    ## 속성명 변환
+    df.rename(columns={'recipe_ingredient':'recipeIngredient', 'recipe_instruction':'recipeInstructions'})
+    
     df["recipeIngredient"] = df["recipeIngredient"].apply(literal_eval)
     df["recipeInstructions"] = df["recipeInstructions"].apply(literal_eval)
+
     return df.drop_duplicates("name").reset_index(drop=True)
 
 

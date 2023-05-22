@@ -24,4 +24,6 @@ WORKDIR /app
 COPY requirements.txt ./
 
 # 필요한 패키지 설치
+RUN pip install --upgrade pip
+RUN pip install psycopg2
 RUN pip install --no-cache-dir -r requirements.txt
