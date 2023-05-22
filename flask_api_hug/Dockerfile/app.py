@@ -77,7 +77,7 @@ def process_data(query: str) -> List[Dict]:
 def generate_recipe(ingredients: str) -> Dict[str,str]:
 
 
-    dummy_recipe =    {
+    dummy_recipe = {
         "foodName": "감자 김치 계란 볶음밥",
         "ingredients": [
             "감자 1개",
@@ -105,7 +105,7 @@ def generate_recipe(ingredients: str) -> Dict[str,str]:
             "9. 깨를 뿌려주면 완성입니다."
         ]
     }
-
+    print(dummy_recipe)
     return dummy_recipe 
 
     # input_ids = TOKENIZER.encode(input_text, return_tensors='pt')
