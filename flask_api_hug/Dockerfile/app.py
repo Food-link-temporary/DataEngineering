@@ -16,16 +16,16 @@ RECIPE_KEYS = ["foodName", "ingredients", "recipe"]
 DB_KEYS = ["name", "recipeIngredient", "recipeInstructions"]
 NUM_SIMILAR_RECIPES = 3
 
-# load the pre-trained KoGPT tokenizer
-# TOKENIZER = PreTrainedTokenizerFast.from_pretrained('skt/kogpt2-base-v2')
+load the pre-trained KoGPT tokenizer
+TOKENIZER = PreTrainedTokenizerFast.from_pretrained('skt/kogpt2-base-v2')
 
-# load the pre-trained KoGPT model
-# MODEL = GPT2LMHeadModel.from_pretrained('skt/kogpt2-base-v2')
+load the pre-trained KoGPT model
+MODEL = GPT2LMHeadModel.from_pretrained('skt/kogpt2-base-v2')
 
-# parser = argparse.ArgumentParser()
-# parser.add_argument("--k", "--apiKey", dest="menu", type=str, help='Please set Google Bard API key')
+parser = argparse.ArgumentParser()
+parser.add_argument("--k", "--apiKey", dest="menu", type=str, help='Please set Google Bard API key')
 
-# args = parser.parse_args()
+args = parser.parse_args()
 
 app = Flask(__name__)
 
